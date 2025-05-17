@@ -4,8 +4,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.apps import apps
 from django.utils import timezone
-from .models import PendingChange
-from .serializers import PendingChangeSerializer
+from .models import PendingChange,UserTypePermission
+from .serializers import PendingChangeSerializer,UserTypePermissionSerializer
 from django.shortcuts import get_object_or_404
 
 # View to list and create pending changes
@@ -80,3 +80,24 @@ class RejectChangeAPIView(APIView):
         change.save()
 
         return Response({'message': 'Change rejected successfully'})
+
+
+class UserTypePermissionListCreateAPIView(APIView):
+    def get(self, request):
+        queryset = UserTypePermission.objects.all()
+        serializer = UserTypePermissionSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
+
+class UserTypePermissionDetailView(APIView):
+    def get(self, request, user_type):
+        permission = get_object_or_404(UserTypePermission, user_type=user_type)
+        serializer = UserTypePermissionSerializer(permission)
+        return Response(serializer.data)
+
+    def patch(self, request, user_type):
+        permission = get_object_or_404(UserTypePermission, user_type=user_type)
+        serializer = UserTypePermissionSerializer(permission, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+

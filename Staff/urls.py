@@ -29,6 +29,7 @@ urlpatterns = [
     path('upload-image/', views.ImageUploadView.as_view()),
     path('containers/count/', views.WasteContainerCountView.as_view()),
     path('complaints/unsolved/count/', views.UnsolvedComplaintsCountView.as_view()),
+    path('complaints/solved/count/', views.SolvedComplaintsCountView.as_view()),
     path('trucks/on_trip/count/', views.OnTripTrucksCountView.as_view()),
     path('trips/fuel-per-month/', views.MonthlyFuelConsumptionView.as_view()),
     path('trips/years/', views.TripsAvailableYearsView.as_view()),

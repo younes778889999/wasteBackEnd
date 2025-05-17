@@ -503,6 +503,10 @@ class UnsolvedComplaintsCountView(APIView):
     def get(self, request):
         count = Complaints.objects.filter(Status='U').count()
         return Response({'count': count})
+class SolvedComplaintsCountView(APIView):
+    def get(self, request):
+        count = Complaints.objects.filter(Status='S').count()
+        return Response({'count': count})
 class OnTripTrucksCountView(APIView):
     def get(self, request):
         count = Truck.objects.filter(on_trip=True).count()
