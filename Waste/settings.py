@@ -92,6 +92,7 @@ MIDDLEWARE = [
 CSRF_TRUSTED_ORIGINS = [
     "https://mybackend.loca.lt",  # Use your actual LocalTunnel URL
     "https://myfrontend.loca.lt",
+    'https://wastebackend-production.up.railway.app'
 ]
 
 ROOT_URLCONF = 'Waste.urls'
