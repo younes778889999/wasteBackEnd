@@ -529,7 +529,8 @@ class MonthlyFuelConsumptionView(APIView):
         monthly_data = [
             {
                 "month": f"{year}-{m:02}",
-                "total_fuel": round(totals_dict.get(m, 0), 2)
+                "total_fuel": round(totals_dict.get(m) or 0, 2)
+
             }
             for m in range(1, 13)
         ]
