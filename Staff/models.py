@@ -307,7 +307,7 @@ class Trip(models.Model):
         on_delete=models.PROTECT,
     )
     Landfill = models.ForeignKey(Landfill, on_delete=models.PROTECT)
-    Start_Date = models.DateTimeField(auto_now_add=True)
+    Start_Date = models.DateTimeField(auto_now_add=False,null=True,blank=True)
     Duration_min=models.DecimalField(
         max_digits=10,
         decimal_places=2,

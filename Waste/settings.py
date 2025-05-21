@@ -131,7 +131,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 #         'PASSWORD': 'yyy439512'
 #     }
 # }
-# import os
 
 DATABASES = {
     'default': {
