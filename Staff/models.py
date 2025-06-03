@@ -369,8 +369,12 @@ class Complaints(models.Model):
         (UNSOLVED_CHOICE , 'Unsolved'),
     ]
     Status=models.CharField(max_length=1,choices=STATUS_CHOICES)
-    truck_id=models.ForeignKey('Truck' , on_delete=models.PROTECT,null=True,blank=True)
-    employee_id=models.ForeignKey('Employee' , on_delete=models.PROTECT,null=True,blank=True)
+    request=models.BooleanField(
+        default=False,
+    )
+    is_employee=models.BooleanField(
+        default=False,
+    )
     class Meta:
         db_table='Complaints'
     def __str__(self) -> str:
@@ -391,3 +395,31 @@ class Location(models.Model):
         db_table='Locations'
     def __str__(self) -> str:
         return str(self.Name)
+    from django.db import models
+
+class HistoryTrip(models.Model):
+    trip_id = models.CharField(max_length=100, unique=True)
+    
+    # Static truck and personnel info
+    truck_plate = models.CharField(max_length=50,null=True,blank=True)
+    driver_name = models.CharField(max_length=100,null=True,blank=True)
+    workers_name = models.JSONField(default=list,null=True,blank=True)  # list of worker names
+
+    # Timing and fuel info
+    start_time = models.DateTimeField(null=True,blank=True)
+    Duration_min=models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0.01)],
+         null=True,
+         blank=True )
+    fuel_spent = models.FloatField(null=True,blank=True)
+
+    # Location-related fields
+    landfill = models.JSONField(null=True,blank=True)
+    start_point = models.JSONField(null=True,blank=True)
+    path = models.JSONField(default=list, null=True,blank=True)
+
+    def __str__(self):
+        return f"Trip {self.trip_id} - Truck {self.truck_plate}"
+

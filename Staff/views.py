@@ -21,8 +21,8 @@ from calendar import monthrange
 from .utils import generate_access_token
 import jwt
 from django.http import JsonResponse
-from .models import Truck, Worker, Trip, Employee, Waste_Container, Landfill, Complaints, Location,Driver
-from .serializers import UserSerializer,TruckSerializer,LocationSerializer, TripSerializer, EmployeeSerializer, Waste_ContainerSerializer, LandfillSerializer, ComplaintsSerializer, WorkerSerializer, Truck_LocationSerializer, UserRegistrationSerializer, UserLoginSerializer ,DriverSerializer
+from .models import Truck, Worker, Trip, Employee, Waste_Container, Landfill, Complaints, Location,Driver,HistoryTrip
+from .serializers import UserSerializer,TruckSerializer,LocationSerializer, TripSerializer, EmployeeSerializer, Waste_ContainerSerializer, LandfillSerializer, ComplaintsSerializer, WorkerSerializer, Truck_LocationSerializer, UserRegistrationSerializer, UserLoginSerializer ,DriverSerializer,HistoryTripSerializer
 
 class UserListAPIView(APIView):
     authentication_classes = (TokenAuthentication,)
@@ -266,6 +266,13 @@ class TripDetails(APIView):
         trip.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+class TripsByTruckView(APIView):
+    def get(self, request, truck_id):
+        trips = Trip.objects.filter(truck_id=truck_id)
+        serializer = TripSerializer(trips, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    
 class EmployeeList(APIView):
     # queryset=Employee.objects.all()
     # serializer_class=EmployeeSerializer
@@ -313,7 +320,7 @@ class ContainerDetails(APIView):
         container = get_object_or_404(Waste_Container, pk=id)
         serializer = Waste_ContainerSerializer(container,context={'request': request})
         return Response(serializer.data)
-    def put(self,request ,id):
+    def patch(self,request ,id):
         container = get_object_or_404(Waste_Container, pk=id)
         serializer = Waste_ContainerSerializer(container,data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -549,3 +556,40 @@ class TripsAvailableYearsView(APIView):
                             .distinct() \
                             .order_by('-year')
         return Response({'years': list(years)})
+    
+
+class HistoryTripList(APIView):
+    def get(self, request):
+        queryset = HistoryTrip.objects.all()
+        serializer = HistoryTripSerializer(queryset, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = HistoryTripSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class HistoryTripDetails(APIView):
+    def get(self, request, id):
+        trip = get_object_or_404(HistoryTrip, pk=id)
+        serializer = HistoryTripSerializer(trip, context={'request': request})
+        return Response(serializer.data)
+
+    def patch(self, request, id):
+        trip = get_object_or_404(HistoryTrip, pk=id)
+        serializer = HistoryTripSerializer(trip, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, id):
+        trip = get_object_or_404(HistoryTrip, pk=id)
+        trip.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class UnassignedTrucksView(APIView):
+    def get(self, request):
+        unassigned_trucks = Truck.objects.filter(trip__isnull=True)
+        serializer = TruckSerializer(unassigned_trucks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -33,4 +33,8 @@ urlpatterns = [
     path('trucks/on_trip/count/', views.OnTripTrucksCountView.as_view()),
     path('trips/fuel-per-month/', views.MonthlyFuelConsumptionView.as_view()),
     path('trips/years/', views.TripsAvailableYearsView.as_view()),
+    path('history-trips/', views.HistoryTripList.as_view()),
+    path('history-trips/<int:id>/', views.HistoryTripDetails.as_view()),
+    path('trips/by-truck/<int:truck_id>/', views.TripsByTruckView.as_view()),
+    path('trucks/unassigned/', views.UnassignedTrucksView.as_view()),
 ]

@@ -1,5 +1,5 @@
 from rest_framework import serializers 
-from Staff.models import Truck, Worker, Trip,  Waste_Container, Complaints, Employee, Landfill,  Location ,Driver
+from Staff.models import Truck, Worker, Trip,  Waste_Container, Complaints, Employee, Landfill,  Location ,Driver,HistoryTrip
 from django.contrib.auth import get_user_model
 
 User=get_user_model()
@@ -113,7 +113,7 @@ class LandfillSerializer(serializers.ModelSerializer):
 class ComplaintsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Complaints
-        fields=['id','Name','Number','Picture1','Picture2','Title','Description','Date_filed','Date_solved','Status','truck_id','employee_id']
+        fields=['id','Name','Number','Picture1','Picture2','Title','Description','Date_filed','Date_solved','Status','request','is_employee']
 
 
 class WorkerSerializer(serializers.ModelSerializer):
@@ -135,3 +135,8 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields=['id','Name','Population','Avg_waste']
+
+class HistoryTripSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HistoryTrip
+        fields = '__all__'
