@@ -399,7 +399,6 @@ class Location(models.Model):
 
 class HistoryTrip(models.Model):
     trip_id = models.CharField(max_length=100, unique=True)
-    
     # Static truck and personnel info
     truck_plate = models.CharField(max_length=50,null=True,blank=True)
     driver_name = models.CharField(max_length=100,null=True,blank=True)
@@ -419,6 +418,7 @@ class HistoryTrip(models.Model):
     landfill = models.JSONField(null=True,blank=True)
     start_point = models.JSONField(null=True,blank=True)
     path = models.JSONField(default=list, null=True,blank=True)
+    container_set = models.JSONField(default=list, null=True,blank=True)
 
     def __str__(self):
         return f"Trip {self.trip_id} - Truck {self.truck_plate}"

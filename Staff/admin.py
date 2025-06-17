@@ -18,6 +18,8 @@ admin.site.register(models.Trip)
 admin.site.register(models.Complaints)
 admin.site.register(models.Location)
 admin.site.register(models.User)
+admin.site.register(models.HistoryTrip)
+
 
 
 

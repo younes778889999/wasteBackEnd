@@ -571,20 +571,20 @@ class HistoryTripList(APIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class HistoryTripDetails(APIView):
-    def get(self, request, id):
-        trip = get_object_or_404(HistoryTrip, pk=id)
+    def get(self, request, trip_id):
+        trip = get_object_or_404(HistoryTrip, trip_id=trip_id)
         serializer = HistoryTripSerializer(trip, context={'request': request})
         return Response(serializer.data)
 
-    def patch(self, request, id):
-        trip = get_object_or_404(HistoryTrip, pk=id)
+    def patch(self, request, trip_id):
+        trip = get_object_or_404(HistoryTrip, trip_id=trip_id)
         serializer = HistoryTripSerializer(trip, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
-    def delete(self, request, id):
-        trip = get_object_or_404(HistoryTrip, pk=id)
+    def delete(self, request, trip_id):
+        trip = get_object_or_404(HistoryTrip, trip_id=trip_id)
         trip.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
